@@ -1,9 +1,100 @@
 ﻿@page "/Category/insert"
 @page "/Category/update/{id:int}"
+@* @using TastyBlazor.Components.Account.Pages.Manage *@
+@inject ICategoryRepository _CategoryRepository
+@inject NavigationManager _navigationManager
 
 <h3>CategoryUpsert</h3>
+@if (isprocessing)
+{
+    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/Images/loading.gif" alt="Loading" />
+    </div>
+}
+else
+{
+    <div class="card shadow border=-0 mt-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">@(id>0?"Update":"Create") Cateogory </h2>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+           <EditForm FormName="CategoryUpsertForm" Model="Category" OnValidSubmit="UpsertCategory">
+               <DataAnnotationsValidator />
+
+            
+               <div class="border p-3 mt-4">
+                   <div class="form-floating py-6 col-12">
+                       <InputText @bind-Value="Category.Name" class="form-control">
+                           <label for="Name">Name</label>
+                           <ValidationMessage For="@(()=> Category.Name)" />
+                       </InputText>
+                   </div>
+                   <div class="row mt-3">
+                       <div class="col-6 col-md-3">
+                           <button type="submit" class="btn btn-primary form-control" disabled="@isprocessing">
+                                <i class="bi bi-floppy2"></i>  save
+                           </button>
+                       </div> 
+                       <div class="col-6 col-md-3">
+                           <a href="Category" class="btn btn-secondary form-control" disabled="@isprocessing">  
+                              <i class="bi bi-arrow-bar-left"></i>  back to list
+                           </a>
+                       </div>
+                   </div>
+               </div>
+           </EditForm>
+        </div>
+    </div> 
+}
+
 
 @code {
+
+    public bool isprocessing = true;
+
     [Parameter]
-    public int id { get; set; }
+    public int id { get; set; } = 0;
+
+    [SupplyParameterFromForm]
+    private Category Category { get; set; } = new Category();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadCategory();
+            isprocessing = false;
+            StateHasChanged();
+        }
+
+    }
+
+    public async Task LoadCategory()
+    {
+        if(id>0)
+        {
+            Category = await _CategoryRepository.GetAsync(id);
+        }
+    }
+
+    private async Task UpsertCategory()
+    {
+        isprocessing = true;
+        if (Category.Id == 0)
+        {
+           
+            await _CategoryRepository.CreateAsync(Category);
+        }
+        else
+        {
+            await _CategoryRepository.UpdateAsync(Category);
+        }
+        isprocessing = false;
+        _navigationManager.NavigateTo("Category");
+      
+    }
 }

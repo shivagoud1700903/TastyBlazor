@@ -71,9 +71,12 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstrender)
     {
-        await LoadParameters();
-        isprocessing = false;
-        StateHasChanged();
+        if (firstrender)
+        {
+            await LoadParameters();
+            isprocessing = false;
+            StateHasChanged();
+        }
     }
     private async Task LoadParameters()
     {
