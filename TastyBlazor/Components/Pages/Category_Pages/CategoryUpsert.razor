@@ -1,6 +1,6 @@
 ﻿@page "/Category/insert"
 @page "/Category/update/{id:int}"
-@* @using TastyBlazor.Components.Account.Pages.Manage *@
+@inject IJSRuntime _JS
 @inject ICategoryRepository _CategoryRepository
 @inject NavigationManager _navigationManager
 
@@ -13,7 +13,7 @@
 }
 else
 {
-    <div class="card shadow border=-0 mt-4">
+    <div class="card shadow border-0 mt-4">
         <div class="card-header bg-black bg-gradient ml-0 py-3">
             <div class="row">
                 <div class="col-12 text-center">
@@ -86,14 +86,17 @@ else
         isprocessing = true;
         if (Category.Id == 0)
         {
-           
+
             await _CategoryRepository.CreateAsync(Category);
+            await _JS.ToasterSuccess("Cateory Created Sucessfully");
         }
         else
         {
             await _CategoryRepository.UpdateAsync(Category);
+            await _JS.ToasterSuccess("Category Updated Successfully");
         }
         isprocessing = false;
+        await Task.Delay(1500);
         _navigationManager.NavigateTo("Category");
       
     }
