@@ -36,7 +36,7 @@ else
                    <div class="row mt-3">
                        <div class="col-6 col-md-3">
                            <button type="submit" class="btn btn-primary form-control" disabled="@isprocessing">
-                                <i class="bi bi-floppy2"></i>  save
+                                <i class="bi bi-floppy2"></i> @(id>0?"update":"create")
                            </button>
                        </div> 
                        <div class="col-6 col-md-3">

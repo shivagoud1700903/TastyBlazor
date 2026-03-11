@@ -1,12 +1,12 @@
-﻿@page "/Category"
-@inject ICategoryRepository _CategoryRepository
+﻿@page "/Product"
+@inject IProductRepository _ProductRepository
 @inject IJSRuntime _JS
-<h3>Category</h3>
+<h3>Product</h3>
 
 <BsModal OnModalConfirmation="ConfirmDelete_Click"
          ButtonText="Delete"
          ButtonBootstrapStyle="btn btn-danger"
-         Title="Are you surely want to delete this category"></BsModal>
+         Title="Are you surely want to delete this product"></BsModal>
 @if(isprocessing)
 {
     <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
@@ -15,39 +15,54 @@
 }
 else
 {
-    <div class="card shadow border-0 mt-4">
-        <div class="card-header bg-black bg-gradient ml-0 py-3">
+    <div class="card shadow border-0 mt-8">
+        <div class="card-header bg-black bg-gradient ml-0 py-2">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h2 class="text-white py-2">Category List</h2>
+                    <h2 class="text-white py-2">Product List</h2>
                 </div>
             </div>
         </div>
-        <div class="card-body p-4">
+        <div class="card-body p-2">
             <div class="row pb-3">
                 <div class="col-12 text-end">
-                    <a href="category/insert" class="btn btn-lg btn-secondary " style="width:250px"><i class="bi bi-plus-square"></i>  Add New Category</a>
+                    <a href="product/insert" class="btn btn-lg btn-secondary " style="width:250px"><i class="bi bi-plus-square"></i>  Add New Product</a>
                 </div>
             </div>
         </div>
     </div>
-    <p>Category's List</p>
+    <p>Product's List</p>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <td>Name</td>
-                <td></td>
+                <td>Price</td>
+                <td>Description</td>
+                <td>SpecialTag</td>
+                <td>Category</td>
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in Categories)
+            @foreach(var item in Products)
             {
                 <tr>
                     <td>
                         @item.Name
                     </td>
                     <td>
-                        <a href=@($"category/update/{item.Id}") class="btn btn-primary"><i class="bi bi-pencil-square"></i> Edit</a>
+                        @item.Price
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.SpecialTag
+                    </td>
+                    <td>
+                        @item.Category.Name
+                    </td>
+                    <td>
+                        <a href=@($"product/update/{item.Id}") class="btn btn-primary"><i class="bi bi-pencil-square"></i> Edit</a>
                         <a class="btn btn-danger" @onclick="()=>HandleDelete(item.Id)"> <i class="bi bi-trash3"></i> Delete</a>
                     </td>
                     <td>
@@ -64,9 +79,9 @@ else
 @code {
     private bool isprocessing { get; set; } = true;
 
-    private int DeleteCategoryId { get; set; } = 0;
+    private int DeleteProductId { get; set; } = 0;
 
-    private IEnumerable<Category> Categories { get; set; } = new List<Category>();
+    private IEnumerable<Product> Products { get; set; } = new List<Product>();
 
 
     // protected override async Task OnInitializedAsync()
@@ -88,29 +103,29 @@ else
     }
     private async Task LoadParameters()
     {
-        Categories = await _CategoryRepository.GetAllAsync();   
+        Products = await _ProductRepository.GetAllAsync();   
     }
 
     private void HandleDelete(int id)
     {
-        DeleteCategoryId = id;
+        DeleteProductId = id;
         _JS.InvokeVoidAsync("ShowConfirmationModal");
     }
 
     private async Task ConfirmDelete_Click(bool isConfirmed)
     {
         isprocessing = true;
-        if(isConfirmed && DeleteCategoryId !=0 )
+        if(isConfirmed && DeleteProductId !=0 )
         {
-            var result = await _CategoryRepository.DeleteAsync(DeleteCategoryId);
+            var result = await _ProductRepository.DeleteAsync(DeleteProductId);
             if (result)
-                await _JS.ToasterSuccess("Category Deleted Successfullay");
+                await _JS.ToasterSuccess("Product Deleted Successfullay");
             else
-                await _JS.ToasterError("Category not Deleted due to some error");
+                await _JS.ToasterError("Product not Deleted due to some error");
 
             await LoadParameters();
         }
-        DeleteCategoryId = 0;
+        DeleteProductId = 0;
         _JS?.InvokeVoidAsync("HideConfirmationModal");
         isprocessing = false;
     }
