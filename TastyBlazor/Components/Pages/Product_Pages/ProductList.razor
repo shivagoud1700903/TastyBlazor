@@ -51,13 +51,13 @@ else
                         @item.Name
                     </td>
                     <td>
-                        @item.Price.ToString("C",CultureInfo.GetCultureInfo("en-us"));
+                        @item.Price.ToString("C",CultureInfo.GetCultureInfo("en-us"))
                     </td>
                     <td>
                         @item.Description
                     </td>
                     <td>
-                        @item.SpecialTag
+                        <span class="badge text-bg-info">@item.SpecialTag</span>
                     </td>
                     <td>
                         @item.Category.Name

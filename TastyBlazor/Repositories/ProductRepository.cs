@@ -7,10 +7,12 @@ namespace TastyBlazor.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public ProductRepository(ApplicationDbContext db)
+        public ProductRepository(ApplicationDbContext db, IWebHostEnvironment _webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<Product> CreateAsync(Product obj)
         {
@@ -22,6 +24,11 @@ namespace TastyBlazor.Repositories
         public async Task<bool> DeleteAsync(int id)
         {
             var obj =  await _db.Product.FirstOrDefaultAsync(u => u.Id == id);
+            var imagepath = Path.Combine(webHostEnvironment.WebRootPath, obj.ImageUrl.Trim('/'));
+            if (File.Exists(imagepath))
+            {
+                File.Delete(imagepath);
+            }
                 if(obj is not null)
             {
                 _db.Product.Remove(obj);
