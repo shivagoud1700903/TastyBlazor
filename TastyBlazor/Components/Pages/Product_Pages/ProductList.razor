@@ -1,4 +1,5 @@
 ﻿@page "/Product"
+@using System.Globalization
 @inject IProductRepository _ProductRepository
 @inject IJSRuntime _JS
 <h3>Product</h3>
@@ -50,7 +51,7 @@ else
                         @item.Name
                     </td>
                     <td>
-                        @item.Price
+                        @item.Price.ToString("C",CultureInfo.GetCultureInfo("en-us"));
                     </td>
                     <td>
                         @item.Description
@@ -80,6 +81,8 @@ else
     private bool isprocessing { get; set; } = true;
 
     private int DeleteProductId { get; set; } = 0;
+
+
 
     private IEnumerable<Product> Products { get; set; } = new List<Product>();
 

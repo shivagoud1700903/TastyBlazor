@@ -56,6 +56,13 @@ else
                         <ValidationMessage For="@(() => Product.CategoryId)" />
                     </div>
 
+                    <div class="form-floating py-3 col-12">
+                        <InputFile Onchange="LoadFiles" class="form-control" id="CustomFile" accept="image/x-png,image/jpeg" />
+                        <label for="CustomFile">Upload Image</label>
+                       
+
+                    </div>
+
                    <div class="row mt-3">
                        <div class="col-6 col-md-3">
                            <button type="submit" class="btn btn-primary form-control" disabled="@isprocessing">
@@ -84,6 +91,10 @@ else
 
     [SupplyParameterFromForm]
     private Product Product { get; set; } = new Product();
+
+    private bool _IsImageLoading { get; set; } = false;
+
+    private string _DirectoryPath { get; set; }
 
     private IEnumerable<Category>? _categories { get; set; }
 
@@ -124,6 +135,11 @@ else
         isprocessing = false;
         await Task.Delay(1500);
         _navigationManager.NavigateTo("Product");
-      
+
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        
     }
 }
