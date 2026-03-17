@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /TastyBlazor/appsettings.json
 /TastyBlazor/appsettings.json
+/TastyBlazor/Data/Migrations/20260317094944_addingorderdetailandorderheadertables.cs
+/TastyBlazor/Data/Migrations/20260317094944_addingorderdetailandorderheadertables.Designer.cs
+/TastyBlazor/appsettings.Development.json
