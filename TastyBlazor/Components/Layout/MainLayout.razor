@@ -4,23 +4,20 @@
 
 
 
-<AuthorizeView Roles="@SD.Role_Admin">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-</AuthorizeView>
+
 
 <div class="page">
     
-
+    <AuthorizeView Roles="@SD.Role_Admin">
+        <div class="sidebar">
+            <NavMenu />
+        </div>
+    </AuthorizeView>
     <main>
         @if(_navBarVisible)
         {
             <NavBar></NavBar>
         }
-      
-
-
         <article class="content px-4">
             @Body
         </article>
@@ -43,7 +40,11 @@
 
     protected override async Task OnAfterRenderAsync(bool firstrender)
     {
-        _navBarVisible = await ShowNavBar();
+        if (firstrender)
+        {
+            _navBarVisible = await ShowNavBar();
+            StateHasChanged();
+        }
     }
 
     private async Task<bool> ShowNavBar()
